@@ -1,10 +1,7 @@
-from __future__ import print_function, absolute_import
-
 import tensorflow as tf
 from tensorflow import keras
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 import pandas as pd
 
@@ -42,6 +39,19 @@ training_data_normalized = normalize(training_data,training_norms)
 
 model_params = (len(training_data.keys()),16,0.005)
 
-validation_scores = k_fold(4, training_data_normalized, training_labels, model_params)
+#k fold evaluation
+mean_abs_errors = k_fold(4, training_data_normalized, training_labels, model_params,no_epochs=40)
 
-print(validation_scores)
+avg = np.mean(mean_abs_errors)
+
+print("Average mean absolute error across the k fold = {0:2.2f}%".format(avg*100))
+
+#the final model
+model = build_model(*model_params)
+
+hist = model.fit(training_data_normalized,training_labels,verbose=0,epochs=10)
+loss,mean_abs_error,mean_squared_error = model.evaluate(test_data_normalized,test_labels,verbose=0)
+
+print("Average mean absolute error on the test data = {0:2.2f}%".format(mean_abs_error*100))
+
+print("Average mean squared error across the test data = {0:2.2f}%".format(mean_squared_error*100))

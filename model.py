@@ -26,7 +26,7 @@ def build_model(dataset_length,hidden_size,learning_rate):
 #k - the number of partitions to use
 #data - the data to split into the training and validation paritions
 #model_params - tuple of parameters for build_model
-def k_fold(k, data,labels,model_params):
+def k_fold(k, data,labels,model_params,no_epochs=10):
     num_val = len(data)//k
     #np.random.shuffle(data)
     validation_scores = []
@@ -37,9 +37,9 @@ def k_fold(k, data,labels,model_params):
         training_labels = labels[:i*num_val].add(labels[(i+1)*num_val:],fill_value =0)
         #print(training_data,training_labels)
         model  = build_model(*model_params)
-        hist = model.fit(training_data,training_labels,epochs = 10,verbose = 0)
+        hist = model.fit(training_data,training_labels,epochs = no_epochs,verbose = 0)
 
         val_score = model.evaluate(validation_data,validation_labels,verbose=0)
         print(val_score)
-        validation_scores.append(val_score)
+        validation_scores.append(val_score[1])
     return validation_scores
