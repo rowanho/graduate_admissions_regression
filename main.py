@@ -39,6 +39,7 @@ training_norms = training_norms.transpose()
 test_data_normalized = normalize(test_data,training_norms)
 training_data_normalized = normalize(training_data,training_norms)
 
+
 model_params = (len(training_data.keys()),16,0.005)
 
 validation_scores = k_fold(4, training_data_normalized, training_labels, model_params)

@@ -6,6 +6,7 @@
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
+import pandas as pd
 
 def build_model(dataset_length,hidden_size,learning_rate):
     model = keras.Sequential([
@@ -32,10 +33,13 @@ def k_fold(k, data,labels,model_params):
     for i in range(k):
         validation_data = data[i*num_val:(i+1)*num_val]
         validation_labels = labels[i*num_val:(i+1)*num_val]
-        training_data = data[:i*num_val]+ data[(i+1)*num_val:]
-        training_labels = labels[:i*num_val]+ labels[(i+1)*num_val:]
+        training_data = data[:i*num_val].add(data[(i+1)*num_val:],fill_value = 0)
+        training_labels = labels[:i*num_val].add(labels[(i+1)*num_val:],fill_value =0)
+        #print(training_data,training_labels)
         model  = build_model(*model_params)
-        model.fit(training_data,training_labels,epochs = 5,verbose = 0)
+        hist = model.fit(training_data,training_labels,epochs = 10,verbose = 0)
+
         val_score = model.evaluate(validation_data,validation_labels,verbose=0)
+        print(val_score)
         validation_scores.append(val_score)
     return validation_scores
