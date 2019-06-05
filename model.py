@@ -1,23 +1,13 @@
-from __future__ import print_function, absolute_import
+def build_model(dataset,hidden_size,learning_rate):
+    model = keras.Sequential([
+        layers.Dense(hidden_size,activation=tf.nn.relu, input_shape = [len(dataset.keys())]),
+        layers.Dense(hidden_size, activation=tf.nn.relu),
+        layers.Dense(1)
+    ])
 
-import tensorflow as tf
-from tensorflow import keras
+    optimizer = tf.keras.optimizers.RMSprop(learning_rate)
 
-import numpy as np
-import matplotlib.pyplot as plt
-
-import pandas as pd
-
-DATAPATH = 'graduate-admissions/Admission_Predict_Ver1.1.csv'
-TEST_AMOUNT = 200
-cols = ['Serial No.','GRE Score', 'TOEFL Score', 'University Rating',
-        'SOP', 'LOR', 'CGPA', 'Research','Chance of Admit']
-csv_dataset = pd.read_csv(DATAPATH, names=cols,sep=',',skipinitialspace = True)
-
-#serial number is irrelevant
-csv_dataset.pop('Serial No.')
-
-
-test_data = csv_dataset[:TEST_AMOUNT]
-
-training_data = csv_dataset[TEST_AMOUNT:]
+    model.compile(loss='mean_squared_error',
+        optimizer=optimizer,
+        metrics=['mean_absolute_error', 'mean_squared_error'])
+    return model
