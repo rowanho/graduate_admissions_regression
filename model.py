@@ -1,8 +1,17 @@
-def build_model(dataset,hidden_size,learning_rate):
+#builds the model
+#dataset_length - for defining the input size of the first layer
+#hidden_size  the size of the 2 hidden layers
+#learning_rate - the learning rate of the optimizer
+
+import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+
+def build_model(dataset_length,hidden_size,learning_rate):
     model = keras.Sequential([
-        layers.Dense(hidden_size,activation=tf.nn.relu, input_shape = [len(dataset.keys())]),
-        layers.Dense(hidden_size, activation=tf.nn.relu),
-        layers.Dense(1)
+        keras.layers.Dense(hidden_size,activation=tf.nn.relu, input_shape = [dataset_length]),
+        keras.layers.Dense(hidden_size, activation=tf.nn.relu),
+        keras.layers.Dense(1)
     ])
 
     optimizer = tf.keras.optimizers.RMSprop(learning_rate)
@@ -11,3 +20,22 @@ def build_model(dataset,hidden_size,learning_rate):
         optimizer=optimizer,
         metrics=['mean_absolute_error', 'mean_squared_error'])
     return model
+
+#implements k fold validation
+#k - the number of partitions to use
+#data - the data to split into the training and validation paritions
+#model_params - tuple of parameters for build_model
+def k_fold(k, data,labels,model_params):
+    num_val = len(data)//k
+    #np.random.shuffle(data)
+    validation_scores = []
+    for i in range(k):
+        validation_data = data[i*num_val:(i+1)*num_val]
+        validation_labels = labels[i*num_val:(i+1)*num_val]
+        training_data = data[:i*num_val]+ data[(i+1)*num_val:]
+        training_labels = labels[:i*num_val]+ labels[(i+1)*num_val:]
+        model  = build_model(*model_params)
+        model.fit(training_data,training_labels,epochs = 5,verbose = 0)
+        val_score = model.evaluate(validation_data,validation_labels,verbose=0)
+        validation_scores.append(val_score)
+    return validation_scores

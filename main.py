@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 
-from model import build_model
+from model import build_model, k_fold
 
 DATAPATH = 'graduate-admissions/Admission_Predict_Ver1.1.csv'
 TEST_PROPORTION = 0.3
@@ -39,4 +39,8 @@ training_norms = training_norms.transpose()
 test_data_normalized = normalize(test_data,training_norms)
 training_data_normalized = normalize(training_data,training_norms)
 
-model = build_model(training_data,16)
+model_params = (len(training_data.keys()),16,0.005)
+
+validation_scores = k_fold(4, training_data_normalized, training_labels, model_params)
+
+print(validation_scores)
