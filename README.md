@@ -1,6 +1,9 @@
 # graduate_admissions_regression
 A regression problem using tensorflow/keras with a small dataset
 
+Given parameters such as test scores, number of research projects and university ranking, aims to predict the probability
+of a student making it onto a graduate program.
+
 Dataset can be found at:
 https://www.kaggle.com/mohansacharya/graduate-admissions
 
