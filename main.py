@@ -7,6 +7,7 @@ import pandas as pd
 
 from model import build_model, k_fold
 
+from graphs import plot_history
 DATAPATH = 'graduate-admissions/Admission_Predict_Ver1.1.csv'
 TEST_PROPORTION = 0.3
 cols = ['Serial No.','GRE Score', 'TOEFL Score', 'University Rating',
@@ -36,22 +37,32 @@ training_norms = training_norms.transpose()
 test_data_normalized = normalize(test_data,training_norms)
 training_data_normalized = normalize(training_data,training_norms)
 
-
-model_params = (len(training_data.keys()),16,0.005)
+#parameters for building the model
+#includes the learning rate and the size of the two hidden layers
+LAYER_SIZE = 128
+LEARNING_RATE = 0.0001
+NO_EPOCHS = 30
+BATCH_SIZE = 20
+model_params = (len(training_data.keys()),LAYER_SIZE,LEARNING_RATE)
 
 #k fold evaluation
-mean_abs_errors = k_fold(4, training_data_normalized, training_labels, model_params,no_epochs=40)
+mean_abs_errors,histories = k_fold(4, training_data_normalized, training_labels, model_params,no_epochs=NO_EPOCHS,batch_size=BATCH_SIZE)
 
 avg = np.mean(mean_abs_errors)
 
-print("Average mean absolute error across the k fold = {0:2.2f}%".format(avg*100))
 
 #the final model
 model = build_model(*model_params)
 
-hist = model.fit(training_data_normalized,training_labels,verbose=0,epochs=10)
-loss,mean_abs_error,mean_squared_error = model.evaluate(test_data_normalized,test_labels,verbose=0)
+hist = model.fit(training_data_normalized,training_labels,validation_data = (test_data_normalized,test_labels),verbose=1,epochs=NO_EPOCHS,batch_size = BATCH_SIZE)
+
+loss,mean_abs_error,mean_squared_error = model.evaluate(test_data_normalized,test_labels,verbose=1)
+
+print("Average mean absolute error across the k fold = {0:2.2f}%".format(avg*100))
 
 print("Average mean absolute error on the test data = {0:2.2f}%".format(mean_abs_error*100))
 
 print("Average mean squared error across the test data = {0:2.2f}%".format(mean_squared_error*100))
+plot_history('k fold validation histories', histories)
+
+plot_history([hist])
