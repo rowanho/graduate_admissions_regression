@@ -19,7 +19,7 @@ The given data contains the following information:
 | ... | ... | ... | ... | ... | ... | ... | ... | ...|
 
 Results of k-fold validation with 4 folds,  over 30 epochs:
-![alt text](https://github.com/rowanho/graduate_admissions_regression/graphs/validation.png "validation")
+![alt text](https://github.com/rowanho/graduate_admissions_regression/blob/master/graphs/validation.png "validation")
 
 Results of final training over 30 epochs :
-![alt text](https://github.com/rowanho/graduate_admissions_regression/graphs/training.png "training")
+![alt text](https://github.com/rowanho/graduate_admissions_regression/bloc/master/graphs/training.png "training")
