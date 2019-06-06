@@ -18,8 +18,13 @@ The given data contains the following information:
 | 2 | 324       |107         |4                 |4   |4.5 |8.87 |1        |0.76          |
 | ... | ... | ... | ... | ... | ... | ... | ... | ...|
 
-Results of k-fold validation with 4 folds,  over 30 epochs:
+
+I used k fold validation to help find good parameters for the model with the small amount of data available.
+
+The model achieved around 0.6% mean squared error, and around 5-6% mean absolute error during testing.
+
+History of training with k-fold validation with 4 folds,  over 30 epochs:
 ![alt text](https://github.com/rowanho/graduate_admissions_regression/blob/master/graphs/validation.png "validation")
 
-Results of final training over 30 epochs :
-![alt text](https://github.com/rowanho/graduate_admissions_regression/bloc/master/graphs/training.png "training")
+History of final training over 30 epochs :
+![alt text](https://github.com/rowanho/graduate_admissions_regression/blob/master/graphs/training.png "training")
