@@ -9,8 +9,9 @@ https://www.kaggle.com/mohansacharya/graduate-admissions - with credit to "Mohan
 A Comparison of Regression Models for Prediction of Graduate Admissions,
 IEEE International Conference on Computational Intelligence in Data Science 2019"
 
+## Dataset
 
-The given data contains the following information:
+There are 7 parameters in the dataset which can affect the chance of admission:
 
 |Serial No. | GRE Score | TOEFL Score | University Rating | SOP | LOR | CGPA | Research | Chance of  Admit |
 | --- | -------- | -------- | ---------- | ---------------- | ------- | --- | ------- | ------------ |
@@ -18,6 +19,7 @@ The given data contains the following information:
 | 2 | 324       |107         |4                 |4   |4.5 |8.87 |1        |0.76          |
 | ... | ... | ... | ... | ... | ... | ... | ... | ...|
 
+## Results
 
 I used k fold validation to help find good parameters for the model with the small amount of data available.
 
