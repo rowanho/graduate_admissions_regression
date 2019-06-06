@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
+import seaborn as sns
+
 #input - tensorflow history object
 def plot_history(title,histories):
     plt.figure(figsize=(20,10))
@@ -11,4 +13,5 @@ def plot_history(title,histories):
     plt.ylabel('Mean squared error')
     plt.legend()
     plt.xlim([0,max(history.epoch)])
+    plt.title(title)
     plt.show()

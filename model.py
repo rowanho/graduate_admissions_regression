@@ -28,7 +28,6 @@ def build_model(dataset_length,hidden_size,learning_rate):
 #model_params - tuple of parameters for build_model
 def k_fold(k, data,labels,model_params,no_epochs=10,batch_size = 32):
     num_val = len(data)//k
-    #np.random.shuffle(data)
     validation_scores = []
     histories = []
     for i in range(k):
@@ -38,8 +37,7 @@ def k_fold(k, data,labels,model_params,no_epochs=10,batch_size = 32):
         training_labels = labels[:i*num_val].add(labels[(i+1)*num_val:],fill_value =0)
         #print(training_data,training_labels)
         model  = build_model(*model_params)
-        hist = model.fit(training_data,training_labels,epochs = no_epochs,batch_size = batch_size,verbose = 1,validation_data = (validation_data,validation_labels))
-
+        hist = model.fit(training_data,training_labels,epochs = no_epochs,batch_size = batch_size,verbose = 0,validation_data = (validation_data,validation_labels))
         val_score = model.evaluate(validation_data,validation_labels,verbose=0)
         validation_scores.append(val_score[1])
         histories.append(hist)

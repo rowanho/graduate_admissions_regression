@@ -39,30 +39,34 @@ training_data_normalized = normalize(training_data,training_norms)
 
 #parameters for building the model
 #includes the learning rate and the size of the two hidden layers
-LAYER_SIZE = 128
+#the following parameters achieve about 5-6% mean absolute error, which isn't too bad given the small dataset
+LAYER_SIZE = 256
 LEARNING_RATE = 0.0001
 NO_EPOCHS = 30
-BATCH_SIZE = 20
+BATCH_SIZE = 30
 model_params = (len(training_data.keys()),LAYER_SIZE,LEARNING_RATE)
 
-#k fold evaluation
-mean_abs_errors,histories = k_fold(4, training_data_normalized, training_labels, model_params,no_epochs=NO_EPOCHS,batch_size=BATCH_SIZE)
+#runs the k fold evaluation
+#we can use the results of this to give a more balanced view of what changing parameters does to our model
+def k_fold_validation():
+    mean_abs_errors,histories = k_fold(4, training_data_normalized, training_labels, model_params,no_epochs=NO_EPOCHS,batch_size=BATCH_SIZE)
+    avg = np.mean(mean_abs_errors)
+    print("Average mean absolute error across the k fold = {0:2.2f}%".format(avg*100))
+    plot_history('k fold validation histories', histories)
 
-avg = np.mean(mean_abs_errors)
+
+# runs the the final model
+def final_training():
+    model = build_model(*model_params)
+    hist = model.fit(training_data_normalized,training_labels,validation_data = (test_data_normalized,test_labels),verbose=0,epochs=NO_EPOCHS,batch_size = BATCH_SIZE)
+    loss,mean_abs_error,mean_squared_error = model.evaluate(test_data_normalized,test_labels,verbose=0)
+    model.save('model.h5')
+    print("Average mean absolute error on the test data = {0:2.2f}%".format(mean_abs_error*100))
+    print("Average mean squared error across the test data = {0:2.2f}%".format(mean_squared_error*100))
+    plot_history('Normal training history',[hist])
 
 
-#the final model
-model = build_model(*model_params)
+if __name__ == "__main__":
+    k_fold_validation()
 
-hist = model.fit(training_data_normalized,training_labels,validation_data = (test_data_normalized,test_labels),verbose=1,epochs=NO_EPOCHS,batch_size = BATCH_SIZE)
-
-loss,mean_abs_error,mean_squared_error = model.evaluate(test_data_normalized,test_labels,verbose=1)
-
-print("Average mean absolute error across the k fold = {0:2.2f}%".format(avg*100))
-
-print("Average mean absolute error on the test data = {0:2.2f}%".format(mean_abs_error*100))
-
-print("Average mean squared error across the test data = {0:2.2f}%".format(mean_squared_error*100))
-plot_history('k fold validation histories', histories)
-
-plot_history([hist])
+    final_training()
