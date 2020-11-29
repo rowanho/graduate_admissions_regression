@@ -9,7 +9,7 @@ from graphs import plot_history
 def normalize(data, norms):
     return (data - norms['mean'])/norms['std']
 
-#loads and normalises the data
+# Loads and normalises the data
 def get_data(datapath):
     TEST_PROPORTION = 0.3
     cols = ['Serial No.','GRE Score', 'TOEFL Score', 'University Rating',
@@ -17,14 +17,14 @@ def get_data(datapath):
 
     csv_dataset = pd.read_csv(datapath, names=cols,sep=',',skiprows =1,skipinitialspace = True)
 
-    #serial number is irrelevant
+    # Serial number is irrelevant
     csv_dataset.pop('Serial No.')
 
-    #randomnly split into test and training data
+    # Randomnly split into test and training data
     test_data = csv_dataset.sample(frac=TEST_PROPORTION,random_state=0)
     training_data = csv_dataset.drop(test_data.index)
 
-    #separate out what we are trying to predict -  the chance of admission
+    # Separate out what we are trying to predict -  the chance of admission
     test_labels = test_data.pop('Chance of Admit')
     training_labels = training_data.pop('Chance of Admit')
 
@@ -36,10 +36,10 @@ def get_data(datapath):
 
     return  training_data_normalized, training_labels,test_data_normalized,test_labels
 
-#builds the keras model object
-#dataset_length - for defining the input size of the first layer
-#hidden_size  the size of the 2 hidden layers
-#learning_rate - the learning rate of the optimizer
+# Builds the keras model object
+# dataset_length - for defining the input size of the first layer
+# hidden_size  the size of the 2 hidden layers
+# learning_rate - the learning rate of the optimizer
 
 def build_model(dataset_length,hidden_size,learning_rate):
     model = keras.Sequential([
@@ -55,8 +55,8 @@ def build_model(dataset_length,hidden_size,learning_rate):
         metrics=['mean_absolute_error', 'mean_squared_error'])
     return model
 
-#runs the k fold evaluation
-#we can use the results of this to give a more balanced view of what changing parameters does to our model
+# Runs the k fold evaluation
+# We can use the results of this to give a more balanced view of what changing parameters does to our model
 def k_fold_validation(dataset,model_params,k,batch_size,no_epochs):
     data,labels = dataset
     num_val = len(data)//k
@@ -78,7 +78,7 @@ def k_fold_validation(dataset,model_params,k,batch_size,no_epochs):
     plot_history('k fold validation histories', histories)
 
 
-# runs the the final model
+# Runs the the final model
 def final_training(dataset,model_params,batch_size,no_epochs):
     training_data, training_labels, test_data, test_labels = dataset
     model = build_model(*model_params)
@@ -93,7 +93,7 @@ def final_training(dataset,model_params,batch_size,no_epochs):
 if __name__ == "__main__":
 
     training_data,training_labels, test_data, test_labels = get_data('graduate-admissions/Admission_Predict_Ver1.1.csv')
-    #parameters for building the model
+    # parameters for building the model
     LAYER_SIZE = 256
     LEARNING_RATE = 0.0001
     NO_EPOCHS = 30
