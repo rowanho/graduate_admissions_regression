@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-#input - tensorflow history object
+# input - tensorflow history object
 def plot_history(title,histories):
     plt.figure(figsize=(20,10))
     for count,history in enumerate(histories):
